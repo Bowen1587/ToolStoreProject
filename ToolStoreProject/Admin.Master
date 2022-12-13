@@ -1,0 +1,48 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Admin.master.cs" Inherits="ToolStoreProject.Admin" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+<link rel="shortcut icon" type="image/x-icon" href="Stock/ToolStore.ico"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body style="background-image: url('Stock/background2.jpg'); background-size:cover; no-repeat; background-attachment: fixed; background-position: center">
+    <form id="form1" runat="server">    
+        <div>
+            <table align="center">
+                <tr style="border-width:8px; border-color:#666666; width:1200px; color:#666666; height:60px" bgcolor="#456">
+                    <td>
+                    <div class="navbar">
+                        <table align="center" cellpadding="10">
+                            <tr style="border-color:#666666">
+                                <td>
+                                    <asp:Button CssClass="button" ID="AddProduct_BT" runat="server" Text="Add Product" Height="49px" Width="171px" Font-Bold="true" Font-Size="Medium" CausesValidation="false" BorderColor="#666666" OnClick="AddProduct_BT_Click"/>
+                                </td>
+                                <td>
+                                    <asp:Button CssClass="button" ID="UpdateProduct_BT" runat="server" Text="Update Product" Height="49px" Width="171px" Font-Bold="true" Font-Size="Medium" CausesValidation="false" BorderColor="#666666" OnClick="UpdateProduct_BT_Click"/>
+                                </td>
+                                <td>
+                                    <asp:Button CssClass="button" ID="OrderStatus_BT" runat="server" Text="Order Status" Height="49px" Width="171px" Font-Bold="true" Font-Size="Medium" CausesValidation="false" BorderColor="#666666" OnClick="OrderStatus_BT_Click"/>
+                                </td>
+                                <td>
+                                    <asp:Button CssClass="button" ID="ListMembers_BT" runat="server" Text="List Members" Height="49px" Width="171px" Font-Bold="true" Font-Size="Medium" CausesValidation="false" BorderColor="#666666" OnClick="ListMembers_BT_Click"/>
+                                </td>
+                                <td>
+                                    <asp:Button CssClass="button" ID="AdminLogOut_BT" runat="server" Text="Log Out" Height="49px" Width="171px" Font-Bold="true" Font-Size="Medium" CausesValidation="false" BorderColor="#666666" OnClick="AdminLogOut_BT_Click"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    </td>
+                </tr>
+            </table>
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+    </form>
+</body>
+</html>

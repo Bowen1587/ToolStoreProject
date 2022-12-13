@@ -75,6 +75,25 @@
                  </td>
              </tr>
          </table>
+        <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:toolConnectionString %>" SelectCommand="SELECT [Member_ID], [Account], [Mem_Name] FROM [Member] WHERE ([Account] = @Account)">
+            <SelectParameters>
+                <asp:ControlParameter ControlID="AccountTB" Name="Account" PropertyName="Text" Type="String" />
+            </SelectParameters>
+        </asp:SqlDataSource>
+        <table align="center">
+            <tr >
+                <td style="text-align:center">
+                     <asp:Label ID="ErrorLabel" runat="server" Text="" Font-Bold="True" Font-Size="XX-Large" ForeColor="#FF282E" Font-Names="Segoe UI" ></asp:Label>
+                </td>
+            </tr>
+        </table>       
+        <asp:DetailsView ID="clientDetailsView" runat="server" AutoGenerateRows="False" DataSourceID="SqlDataSource1" Height="50px" Width="183px" EmptyDataText="帳號密碼錯誤" Visible="False" BackColor="Red" Font-Bold="True" align="center" DataKeyNames="Member_ID">
+             <Fields>
+                 <asp:BoundField DataField="Account" HeaderText="Account" SortExpression="Account" />
+                 <asp:BoundField DataField="Mem_Name" HeaderText="Mem_Name" SortExpression="Mem_Name" />
+                 <asp:BoundField DataField="Member_ID" HeaderText="Member_ID" SortExpression="Member_ID" />
+             </Fields>
+         </asp:DetailsView>
     </form>
 </body>
 </html>

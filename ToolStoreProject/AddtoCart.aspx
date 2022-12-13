@@ -15,7 +15,7 @@
             <br /><br />
             <asp:HyperLink ID="HyperLink1" runat="server" Font-Names="Comic Sans MS" Font-Size="XX-Large" BackColor="#996633" BorderColor="#CC9900" ForeColor="#FFFFCC" NavigateUrl="Store.aspx">Continue Shopping</asp:HyperLink>
             <br /><br />
-            <asp:Label ID="Remaining" runat="server" Text=""></asp:Label>
+            <asp:Label ID="Remaining" runat="server" Font-Bold="True" Font-Size="X-Large" ForeColor="#FF471A" BackColor="Black" Font-Names="Segoe UI"></asp:Label>
             <br /><br />
             <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" BackColor="#FFFFCC" BorderColor="#996600" BorderWidth="5px" Height="200px" Width="839px" EmptyDataText="No products for now" OnRowDeleting="GridView1_RowDeleting" text-align="middle">
                 <Columns>

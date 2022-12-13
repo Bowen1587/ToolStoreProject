@@ -204,7 +204,7 @@ namespace ToolStoreProject
                 if(remaining < Convert.ToInt32(dt.Rows[i]["quantity"]))
                 {
                     ValidAmount = false;
-                    Remaining.Text = "There are only " + remaining.ToString() + " left for " + dt.Rows[i]["name"];
+                    Remaining.Text = "There are only " + remaining.ToString() + " left for \"" + dt.Rows[i]["name"] + '"';
                 }
                 scon.Close();
             }
@@ -217,7 +217,9 @@ namespace ToolStoreProject
                     scon.Open();
                     SqlCommand cmd = new SqlCommand("insert into Orders(Product_ID,Product_Name,Order_Price,Quantity,Order_Date,Member_ID) values(" + dt.Rows[i]["ID"] + ",'" + dt.Rows[i]["name"] + "'," + dt.Rows[i]["price"] + "," + dt.Rows[i]["quantity"] + ",'"
                         + Session["Orderdate"] + "'," + Session["Member_ID"] + ")", scon);
+                    SqlCommand cmd2 = new SqlCommand("UPDATE Product SET Remaining -= " + dt.Rows[i]["quantity"] + " WHERE Product_ID = " + dt.Rows[i]["ID"], scon);
                     cmd.ExecuteNonQuery();
+                    cmd2.ExecuteNonQuery();
                     scon.Close();
                 }
             }
@@ -240,10 +242,13 @@ namespace ToolStoreProject
                         dt.Rows[i].Delete();
                         dt.AcceptChanges();
                     }
-                    Session["BuyingItems"] = null;
+                    
                     // place an order, need to be fixed
                     if(ValidAmount)
+                    {
+                        Session["BuyingItems"] = null;
                         Response.Redirect("Store.aspx");
+                    }
                 }
             }
         }

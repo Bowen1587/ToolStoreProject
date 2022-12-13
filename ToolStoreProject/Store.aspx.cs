@@ -18,6 +18,10 @@ namespace ToolStoreProject
             {
                 Name_Label.Text = "使用者: " + Session["Mem_Name"].ToString();
             }
+            else
+            {
+                LogOut_Button.Text = "Log in";
+            }
         }
 
         protected void DataList1_ItemCommand1(object source, DataListCommandEventArgs e)

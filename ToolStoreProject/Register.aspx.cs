@@ -17,6 +17,7 @@ namespace ToolStoreProject
         protected void Page_Load(object sender, EventArgs e)
         {
             PasswordTB.Attributes.Add("value", PasswordTB.Text);
+            
         }
 
         protected void CancelBT_Click(object sender, EventArgs e)
@@ -26,9 +27,23 @@ namespace ToolStoreProject
 
         protected void LoginBT_Click(object sender, EventArgs e)
         {
-            if(AccountTB.Text=="" || PasswordTB.Text=="" || PhoneTB.Text=="" || NameTB.Text=="" || BirthTB.Text=="")
+            clientDetailsView.DataBind();
+            String temp = "";
+            con.Open();
+            SqlCommand CheckAccount = new SqlCommand("SELECT Account FROM Member WHERE Account = '" + AccountTB.Text + "'", con);
+            if(CheckAccount.ExecuteScalar()!=null)
             {
-                Response.Write("<script>alert('All fields must be filled in.');</script>");
+                temp = CheckAccount.ExecuteScalar().ToString();
+            }
+            con.Close();
+            
+            if (temp!="")
+            {
+                ErrorLabel.Text = "Account already taken";
+            }
+            else if (AccountTB.Text == "" || PasswordTB.Text == "" || PhoneTB.Text == "" || NameTB.Text == "" || BirthTB.Text == "")
+            {
+                ErrorLabel.Text = "All fields must be filled.";
             }
             else
             {

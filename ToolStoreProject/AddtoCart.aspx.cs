@@ -12,6 +12,7 @@ namespace ToolStoreProject
 {
     public partial class AddtoCart : System.Web.UI.Page
     {
+        SqlConnection conn = new SqlConnection("Data Source=.; Initial Catalog=tool; User Id=sa; Password=GGxn%483437");
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -41,7 +42,7 @@ namespace ToolStoreProject
                     if (Session["BuyingItems"] == null)
                     {
                         dr = dt.NewRow();
-                        SqlConnection conn = new SqlConnection("Data Source=.; Initial Catalog=tool; User Id=sa; Password=GGxn%483437");
+                        //SqlConnection conn = new SqlConnection("Data Source=.; Initial Catalog=tool; User Id=sa; Password=GGxn%483437");
                         
                         SqlDataAdapter da = new SqlDataAdapter("select * from Product where Product_ID=" + Request.QueryString["id"], conn);
                         DataSet ds = new DataSet();
@@ -68,41 +69,58 @@ namespace ToolStoreProject
                         GridView1.FooterRow.Cells[3].Text = "Total Amount";
                         GridView1.FooterRow.Cells[4].Text = grandtotal().ToString();
                         Response.Redirect("AddtoCart.aspx");
-                    }
+                    }                    
                     else
                     {
+                        bool SameItem = false;
                         dt = (DataTable)Session["BuyingItems"];
-                        int sr;
-                        sr = dt.Rows.Count;
+                        for (int i = 0; i < dt.Rows.Count; i++)
+                        {
+                            if (Convert.ToInt32(dt.Rows[i]["ID"]) == Convert.ToInt32(Request.QueryString["id"]))
+                            {
+                                dt.Rows[i]["quantity"] = (Convert.ToInt32(dt.Rows[i]["quantity"]) + Convert.ToInt32(Request.QueryString["quantity"])).ToString();
+                                int price = Convert.ToInt32(dt.Rows[i]["price"]);
+                                int quantity = Convert.ToInt32(dt.Rows[i]["quantity"]);
+                                dt.Rows[i]["total"] = (price * quantity);
+                                SameItem = true;
+                                break;
+                            }
+                        }
+                        if (!SameItem)
+                        {
+                            int sr;
+                            sr = dt.Rows.Count;
 
-                        dr = dt.NewRow();
-                        SqlConnection conn = new SqlConnection("Data Source=.; Initial Catalog=tool; User Id=sa; Password=GGxn%483437");
+                            dr = dt.NewRow();
 
-                        SqlDataAdapter da = new SqlDataAdapter("select * from Product where Product_ID=" + Request.QueryString["id"], conn);
-                        DataSet ds = new DataSet();
-                        da.Fill(ds);
 
-                        dr["sno"] = sr + 1;
-                        dr["ID"] = ds.Tables[0].Rows[0]["Product_ID"].ToString();
-                        dr["name"] = ds.Tables[0].Rows[0]["Product_Name"].ToString();
-                        dr["image"] = ds.Tables[0].Rows[0]["PImage"].ToString();
-                        dr["price"] = ds.Tables[0].Rows[0]["Price"].ToString();
-                        dr["quantity"] = Request.QueryString["quantity"];
+                            SqlDataAdapter da = new SqlDataAdapter("select * from Product where Product_ID=" + Request.QueryString["id"], conn);
+                            DataSet ds = new DataSet();
+                            da.Fill(ds);
 
-                        int price = Convert.ToInt32(ds.Tables[0].Rows[0]["price"].ToString());
-                        int Quantity = Convert.ToInt16(Request.QueryString["quantity"].ToString());
-                        int TotalPrice = price * Quantity;
-                        dr["total"] = TotalPrice;
+                            dr["sno"] = sr + 1;
+                            dr["ID"] = ds.Tables[0].Rows[0]["Product_ID"].ToString();
+                            dr["name"] = ds.Tables[0].Rows[0]["Product_Name"].ToString();
+                            dr["image"] = ds.Tables[0].Rows[0]["PImage"].ToString();
+                            dr["price"] = ds.Tables[0].Rows[0]["Price"].ToString();
+                            dr["quantity"] = Request.QueryString["quantity"];
 
-                        dt.Rows.Add(dr);
+                            int price = Convert.ToInt32(ds.Tables[0].Rows[0]["price"].ToString());
+                            int Quantity = Convert.ToInt16(Request.QueryString["quantity"].ToString());
+                            int TotalPrice = price * Quantity;
+                            dr["total"] = TotalPrice;
+
+                            dt.Rows.Add(dr);
+                        }
                         GridView1.DataSource = dt;
-                        GridView1.DataBind();
+                        GridView1.DataBind();    
                         Session["BuyingItems"] = dt;
                         Button1.Enabled = true;
 
                         GridView1.FooterRow.Cells[3].Text = "Total Amount";
                         GridView1.FooterRow.Cells[4].Text = grandtotal().ToString();
-                        Response.Redirect("AddtoCart.aspx");
+                        Response.Redirect("AddtoCart.aspx");    
+                 
                     }
                 }
                 else
@@ -191,6 +209,11 @@ namespace ToolStoreProject
 
         protected void Button1_Click(object sender, EventArgs e)
         {
+            // If session is null redirecting to login else placing order
+            if (Session["Mem_Name"] == null)
+            {
+                Response.Redirect("Default.aspx");
+            }
             DataTable dt  = new DataTable();
             dt = (DataTable)Session["BuyingItems"];
             SqlConnection scon = new SqlConnection(@"Data Source=.; Initial Catalog=tool; User Id=sa; Password=GGxn%483437");
@@ -223,34 +246,26 @@ namespace ToolStoreProject
                     scon.Close();
                 }
             }
-
-            // If session is null redirecting to login else placing order
-            if (Session["Mem_Name"] == null)
+            if (GridView1.Rows.Count == 0)
             {
-                Response.Redirect("Default.aspx");
+                Response.Write("<script>alert('Your cart is empty. You cannot place an order.');</script>");
             }
             else
             {
-                if (GridView1.Rows.Count == 0)
+                for (int i = 0; i < dt.Rows.Count; i++)
                 {
-                    Response.Write("<script>alert('Your cart is empty. You cannot place an order.');</script>");
+                    dt.Rows[i].Delete();
+                    dt.AcceptChanges();
                 }
-                else
+                
+                // place an order, need to be fixed
+                if(ValidAmount)
                 {
-                    for (int i = 0; i < dt.Rows.Count; i++)
-                    {
-                        dt.Rows[i].Delete();
-                        dt.AcceptChanges();
-                    }
-                    
-                    // place an order, need to be fixed
-                    if(ValidAmount)
-                    {
-                        Session["BuyingItems"] = null;
-                        Response.Redirect("Store.aspx");
-                    }
+                    Session["BuyingItems"] = null;
+                    Response.Redirect("Store.aspx");
                 }
             }
+            
         }
     }
 }

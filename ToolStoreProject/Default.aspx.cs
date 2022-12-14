@@ -18,7 +18,7 @@ namespace ToolStoreProject
         protected void LoginBT_Click(object sender, EventArgs e)
         {
             clientDetailsView.Visible = false;
-            if(AccountTB.Text == "admin" & PasswordTB.Text == "123")
+            if(AccountTB.Text == "admin" & PasswordTB.Text == "GGxn%483437")
             {
                 Response.Redirect("AdminHome.aspx");
             }
